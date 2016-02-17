@@ -21,6 +21,7 @@ private:
     Ui::MainWindow *ui;
     Client *c;
     accelerometerWindow *AccelWindow;
+    void generatePlot();
 
 private slots:
     void connect2Server();

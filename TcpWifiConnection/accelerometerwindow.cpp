@@ -6,16 +6,13 @@ accelerometerWindow::accelerometerWindow(QWidget *parent) :
     ui(new Ui::accelerometerWindow)
 {
     ui->setupUi(this);
-
-    this->props.setCentralWidget(ui->widget);
+    timeT = 0;
     //this->props.setWindow(this);
+    props.setCentralWidget(ui->widget);
     this->plot = new PlotHandler::plot<double>(1,1,props);
 
-
-    //Contador para função update (identifica a orientação do dispositivo)
-    QTimer *timer = new QTimer(this);
-    connect(timer, SIGNAL(timeout()), this, SLOT(Update()));
-    timer->start(100);
+    accelHandler = new accelerometerHandler(this);
+    QTimer::singleShot(0, this, SLOT(startUpdate()));
 }
 
 accelerometerWindow::~accelerometerWindow()
@@ -23,9 +20,27 @@ accelerometerWindow::~accelerometerWindow()
     delete ui;
 }
 
+void accelerometerWindow::startUpdate()
+{
+
+    QTimer *timer = new QTimer(this);
+    timer->setInterval(10);
+    connect(timer, SIGNAL(timeout()), this, SLOT(Update()));
+    timer->start();
+}
+
 void accelerometerWindow::Update()
 {
+    timeT++;
+
+    LinAlg::Matrix<double> newValue = this->accelHandler->getXFiltered();
+    this->AccelX = this->AccelX | newValue;
+
+    LinAlg::Matrix<double> newTimeValue = timeT;
+    this->time = this->time | newTimeValue;
+
     ui->widget->hide();
-    this->plot->realTimeDataUpdate((double)accelHandler->getX(), (double)accelHandler->getY());
+    //this->plot = new PlotHandler::plot<double>(this->time, this->AccelX, props);
+    this->plot->realTimeDataUpdate(timeT, this->accelHandler->getP() /*this->accelHandler->getXFiltered()*/);
     ui->widget->show();
 }

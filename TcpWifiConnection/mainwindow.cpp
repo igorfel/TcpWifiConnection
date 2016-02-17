@@ -13,6 +13,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     c = new Client();
+
     connect(ui->pushButton, SIGNAL(clicked(bool)), this, SLOT(connect2Server()));
     connect(ui->sendButton, SIGNAL(clicked(bool)), this, SLOT(sendData()));
 
@@ -72,7 +73,8 @@ MainWindow::~MainWindow()
 
 void MainWindow::connect2Server()
 {
-    this->c->start("10.0.0.2", 51089);
+    this->c->start(ui->lineEdit->text(), ui->lineEdit_2->text().toInt());
+    //this->c->start("169.254.157.41", 61888);
 
     //this->c->client.start
     //Client c2;
@@ -81,13 +83,13 @@ void MainWindow::connect2Server()
 
 void MainWindow::sendData()
 {
-    c->write(ui->lineEdit->text());
+    c->write(ui->lineEdit_2->text());
     showAccelWindow();
 }
 
 void MainWindow::readData()
 {
-    ui->lineEdit_2->setText(c->Read());
+    ui->data->setText(c->Read());
 }
 
 void MainWindow::showAccelWindow()

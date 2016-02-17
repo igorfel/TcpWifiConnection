@@ -171,6 +171,7 @@ template <typename Type>
 void PlotHandler::plot<Type>::realTimeDataUpdate(double i, double j)
 {
 //    double key = QDateTime::currentDateTime().toMSecsSinceEpoch()/1000.0;
+    this->properties.setPlotSize(this->properties.windowSizeX/**(xSubplot-1)*/,this->properties.windowSizeY/**(ySubplot-1)*/,this->properties.windowSizeX, this->properties.windowSizeY);
     customPlot->graph(0)->addData(i, j);
     customPlot->graph(0)->removeDataBefore(i-8);
     customPlot->graph(1)->clearData();
@@ -221,4 +222,3 @@ void PlotHandler::plot<Type>::realTimePlotInit()
         customPlot->yAxis->setLabel(this->properties.yLabel.c_str());
 
 }
-

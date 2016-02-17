@@ -19,12 +19,16 @@ public:
 
 private:
     Ui::accelerometerWindow *ui;
-    PlotHandler::plot<double> *plot;
     accelerometerHandler *accelHandler;
+    PlotHandler::plot<double> *plot;
     PlotHandler::plotProperties props;
+    double timeT;
+
+    LinAlg::Matrix<double> AccelX, AccelY, AccelZ, time;
 
 private slots:
     void Update();
+    void startUpdate();
 };
 
 #endif // ACCELEROMETERWINDOW_H
