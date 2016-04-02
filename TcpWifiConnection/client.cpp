@@ -7,8 +7,9 @@ Client::Client(QObject* parent): QObject(parent)
 {
   connect(&client, SIGNAL(connected()),
     this, SLOT(wake()));
-    //hasRead = 0;
     connect(&client, SIGNAL(readyRead()), this, SLOT(read()));
+
+    this->sensorData = LinAlg::Zeros<int>(3,1);
 
     QNetworkConfigurationManager manager;
     if (manager.capabilities() & QNetworkConfigurationManager::NetworkSessionRequired) {
@@ -58,8 +59,23 @@ void Client::read()
     char buffer[1024] = {0};
     client.read(buffer, client.bytesAvailable());
     this->readByte = buffer;
-    emit this->hasReadData();
+    this->realTimeSensor(buffer);
 
+    emit this->hasReadData();
+}
+
+void Client::realTimeSensor(const char *dataBuffer){
+    int j = 0;
+    for(unsigned int i = 1; i <= 3; ++i){
+        this->sensorData(i, 1) = dataBuffer[j]+(dataBuffer[j+1]*256);
+        j+=2;
+    }
+
+}
+
+LinAlg::Matrix<int> Client::getSensorData()
+{
+    return this->sensorData;
 }
 
 void Client::wake(){}

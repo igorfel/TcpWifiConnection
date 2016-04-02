@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>634</width>
-    <height>506</height>
+    <width>517</width>
+    <height>446</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -22,10 +22,30 @@
   <widget class="QWidget" name="widget" native="true">
    <property name="geometry">
     <rect>
-     <x>9</x>
-     <y>9</y>
-     <width>621</width>
-     <height>491</height>
+     <x>10</x>
+     <y>10</y>
+     <width>501</width>
+     <height>141</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QWidget" name="widget_2" native="true">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>160</y>
+     <width>501</width>
+     <height>121</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QWidget" name="widget_3" native="true">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>290</y>
+     <width>501</width>
+     <height>141</height>
     </rect>
    </property>
   </widget>

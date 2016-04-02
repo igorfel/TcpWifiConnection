@@ -24,11 +24,13 @@
 
 accelerometerHandler::accelerometerHandler(QObject* parent) : QObject(parent)
 {
+    this->_filter = new Filter<double>();
 
     m_sensor = new QAccelerometer(this);
     m_sensor->addFilter(this);
     m_sensor->connectToBackend();
-    m_sensor->setDataRate(100);
+    m_sensor->setAccelerationMode(QAccelerometer::AccelerationMode::Combined);
+    m_sensor->setDataRate(1);
     m_sensor->start();
 
     getDataFlag = true;
@@ -41,24 +43,32 @@ accelerometerHandler::accelerometerHandler(QObject* parent) : QObject(parent)
     //QTimer::singleShot(5000, this, SLOT(stopSampleData()));
 }
 
-void accelerometerHandler::stopSampleData()
-{
-    getDataFlag = false;
+//void accelerometerHandler::stopSampleData()
+//{
+//    getDataFlag = false;
 
-    this->filterXCoef = dataFilterEst(this->AccelX);
-}
+//    this->filterXCoef = dataFilterEst(this->AccelX);
+//}
 
 bool accelerometerHandler::filter(QAccelerometerReading* reading)
 {
     //srand(time(NULL));
-    this->x = reading->x()/10;
+    this->x = reading->x();
     this->y = reading->y();
     this->z = reading->z();
 
-    filter2();
+    this->xFiltered = this->_filter->firstOrder(this->x);
+    this->yFiltered = this->_filter->firstOrder(this->y);
+    this->zFiltered = this->_filter->firstOrder(this->z);
 
-    accel2Vel();
-    vel2Pos();
+    this->Vx = this->_filter->accel2Vel(this->xFiltered, 0.1);
+    this->Vy = this->_filter->accel2Vel(this->yFiltered, 0.1);
+    this->Vz = this->_filter->accel2Vel(this->zFiltered, 0.1);
+
+    this->Px = this->_filter->vel2Pos(this->Vx, 0.1);
+    this->Px = this->_filter->vel2Pos(this->Vy, 0.1);
+    this->Px = this->_filter->vel2Pos(this->Vz, 0.1);
+
 
     /*if(getDataFlag){
         this->AccelX = this->AccelX | this->x;
@@ -107,14 +117,20 @@ double accelerometerHandler::dataFilter(LinAlg::Matrix<double> &filterVet, doubl
     return (coef * filterVet)(1,1);
 }
 
-void accelerometerHandler::filter2(){
-    this->xFiltered += (0.05/0.1)*(this->x - this->xFiltered);
-}
+//void accelerometerHandler::filter2(){
+//    this->xFiltered += (0.001/0.1)*(this->x - this->xFiltered);
+//    this->yFiltered += (0.001/0.1)*(this->y - this->yFiltered);
+//    this->zFiltered += (0.001/0.1)*(this->z - this->zFiltered);
+//}
 
-void accelerometerHandler::accel2Vel(){
-    this->V = this->x/0.1;
-}
+//void accelerometerHandler::accel2Vel(){
+//    this->Vx += this->xFiltered/0.1;
+//    this->Vy = this->yFiltered/0.1;
+//    this->Vz = this->zFiltered/0.1;
+//}
 
-void accelerometerHandler::vel2Pos (){
-    this->P = this->V/0.1;
-}
+//void accelerometerHandler::vel2Pos (){
+//    this->Px += this->Vx/0.1;
+//    this->Py += this->Vy/0.1;
+//    this->Pz += this->Vz/0.1;
+//}

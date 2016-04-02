@@ -22,7 +22,8 @@ SOURCES += main.cpp \
     server.cpp \
     accelerometerhandler.cpp \
     accelerometerwindow.cpp \
-    qcustomplot.cpp
+    qcustomplot.cpp \
+    commands.cpp
 
 HEADERS  += \
     mainwindow.h \
@@ -32,11 +33,15 @@ HEADERS  += \
     SistemasdeControle/headers/graphicLibs/plot.h \
     SistemasdeControle/src/graphicLibs/plot.hpp \
     accelerometerwindow.h \
-    qcustomplot.h
+    qcustomplot.h \
+    commands.h \
+    filter.h \
+    filter.hpp
 
 FORMS    += \
     mainwindow.ui \
-    accelerometerwindow.ui
+    accelerometerwindow.ui \
+    commands.ui
 
 CONFIG += mobility
 MOBILITY = location

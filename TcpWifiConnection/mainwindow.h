@@ -2,8 +2,14 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include <client.h>
 #include <accelerometerwindow.h>
+#include <commands.h>
+#include <QHostAddress>
+#include <QNetworkInterface>
+#include <QStringList>
+#include <QHostInfo>
+#include <QTimer>
+#include <client.h>
 
 namespace Ui {
 class MainWindow;
@@ -21,13 +27,16 @@ private:
     Ui::MainWindow *ui;
     Client *c;
     accelerometerWindow *AccelWindow;
+    Commands *cmdWindow;
     void generatePlot();
 
 private slots:
     void connect2Server();
-    void sendData();
+    void onConnected();
     void readData();
     void showAccelWindow();
+    void showCmdWindow();
+
 };
 
 #endif // MAINWINDOW_H

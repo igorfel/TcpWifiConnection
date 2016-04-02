@@ -1,6 +1,7 @@
 #ifndef ACCELEROMETERHANDLER_H
 #define ACCELEROMETERHANDLER_H
 
+#include <filter.h>
 #include <QAccelerometer>
 #include <SistemasdeControle/headers/primitiveLibs/LinAlg/matrix.h>
 //#include <QGeoPositionInfo>
@@ -17,14 +18,22 @@ public:
     qreal getY(){return y;}
     qreal getZ(){return z;}
     double getXFiltered(){return xFiltered;}
-    double getV(){return V;}
-    double getP(){return P;}
+    double getYFiltered(){return yFiltered;}
+    double getZFiltered(){return zFiltered;}
+
+    double getVx(){return Vx;}
+    double getVy(){return Vy;}
+    double getVz(){return Vz;}
+
+    double getPx(){return Px;}
+    double getPy(){return Py;}
+    double getPz(){return Pz;}
 
     accelerometerHandler(QObject* parent = 0);
 
 //signals:
 private slots:
-    void stopSampleData();
+    //void stopSampleData();
 
     // Override of QAcclerometerFilter::filter(QAccelerometerReading*)
     bool filter(QAccelerometerReading* reading);
@@ -32,17 +41,20 @@ private slots:
 private:
 QAccelerometer* m_sensor;
 qreal x,y,z;
-double timeT, xFiltered;
-double V, P, xAnt;
+double timeT, xFiltered, yFiltered, zFiltered;
+double Vx,Vy,Vz, Px,Py,Pz;
 bool getDataFlag;
-void filter2();
-void accel2Vel();
-void vel2Pos();
+Filter<double> *_filter;
+//void filter2();
+//void accel2Vel();
+//void vel2Pos();
+
 
 LinAlg::Matrix<double> dataFilterEst(LinAlg::Matrix<double> Y);
 public:
 double dataFilter(LinAlg::Matrix<double> &filterVet, double accelData, LinAlg::Matrix<double> coef);
 LinAlg::Matrix<double> AccelX, AccelY, AccelZ, filterXCoef, filterYCoef, filterZCoef, filterXVet, filterYVet, filterZVet;
+
 
 };
 
